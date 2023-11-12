@@ -1,4 +1,5 @@
 import wmi
+import argparse
 
 dns_dict ={
     "google" : ["8.8.8.8", "8.8.4.4"],
@@ -8,17 +9,30 @@ dns_dict ={
     "Adguard" : ["94.140.14.14", "94.140.15.15"],
     "Shecan" : ["178.22.122.100", "185.51.200.2"],
     "Begzar" : ["185.55.226.26", "185.55.225.25"],
-    "" : ["", ""],
+#    "" : ["", ""],
 }
 
-c = wmi.WMI()
-
-adapters = c.Win32_NetworkAdapterConfiguration(IPEnabled=True)
 
 def main():
+    parser = argparse.ArgumentParser("Shows DNS settings for a given internet interface in Windows. Can also set DNS.") 
+    parser.add_argument("--list_interfaces" , help = "List available interfaces.", action="store_true")
+    parser.add_argument("--list_dns" , help = "List available DNS providers.", action="store_true")
 
-    for adapter in adapters:
-        print(adapter.DNSServerSearchOrder)
+    args = parser.parse_args()
+    c = wmi.WMI()
+
+    adapters = c.Win32_NetworkAdapterConfiguration(IPEnabled=True)
+
+    if args.list_dns :
+        #print(dns_dict)
+        print(f"Available DNS providers are as follows:\n")
+        for i in dns_dict.keys():
+            print(f"{i} : {dns_dict[i]}\n")
+
+    if args.list_interfaces :
+        print(f"Available interfaces and their DNSs are as follows:\n")
+        for adapter in adapters:
+            print(f"{adapter} : {adapter.DNSServerSearchOrder}")
 
 
 if __name__=="__main__":
