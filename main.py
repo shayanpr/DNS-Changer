@@ -33,7 +33,7 @@ def main():
     if args.list_interfaces :
         print(f"Available interfaces and their DNSs are as follows:\n")
         for adapter in adapters:
-            print(f"{adapter} : {adapter.DNSServerSearchOrder}")
+            print(f"{adapter.Description} : {adapter.DNSServerSearchOrder}")
 
 
 if __name__=="__main__":
