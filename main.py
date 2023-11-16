@@ -16,8 +16,9 @@ dns_dict ={
 
 def main():
     parser = argparse.ArgumentParser("Shows DNS settings for a given internet interface in Windows. Can also set DNS.") 
-    parser.add_argument("--list_interfaces" , help = "List available interfaces.", action="store_true")
+    parser.add_argument("--list_interfaces" , help = "List available interfaces and their current DNS settings.", action="store_true")
     parser.add_argument("--list_dns" , help = "List available DNS providers.", action="store_true")
+    #parser.add_argument("")
 
     args = parser.parse_args()
     c = wmi.WMI()
