@@ -14,19 +14,43 @@ dns_dict ={
 #    "" : ["", ""],
 }
 
+c = wmi.WMI()
+adapters = c.Win32_NetworkAdapterConfiguration(IPEnabled=True)
+
+
+def print_interfaces(verbose = False ) :
+
+    if verbose:
+        print(f"Available interfaces and their DNSs are as follows:\n")
+        for adapter in adapters:
+            print(f"{adapter} : {adapter.DNSServerSearchOrder}")
+    
+    else:
+        print(f"Available interfaces and their DNSs are as follows:\n")
+        for adapter in adapters:
+            print(f"{adapter.Description} : {adapter.DNSServerSearchOrder}")
+
+
+
 
 def main():
+
+    # Adding parsers for the read-only portion of the program.
     parser = argparse.ArgumentParser("Shows DNS settings for a given internet interface in Windows. Can also set DNS.") 
     parser.add_argument("-li","--list_interfaces" , help = "List available interfaces and their current DNS settings.", action="store_true")
     parser.add_argument("-ld","--list_dns" , help = "List available DNS providers.", action="store_true")
     parser.add_argument("--verbose" , help = "Shows more information.", action="store_true")
+    
+    # Adding parser for the write portion of the program. 
+    #subparser = parser.add_subparsers()
+
+    
+
 
     #parser.add_argument("")
 
     args = parser.parse_args()
-    c = wmi.WMI()
 
-    adapters = c.Win32_NetworkAdapterConfiguration(IPEnabled=True)
 
     if args.list_dns :
         #print(dns_dict)
@@ -35,9 +59,8 @@ def main():
             print(f"{i} : {dns_dict[i]}\n")
 
     if args.list_interfaces :
-        print(f"Available interfaces and their DNSs are as follows:\n")
-        for adapter in adapters:
-            print(f"{adapter.Description} : {adapter.DNSServerSearchOrder}")
+        
+        print_interfaces(args.verbose)
 
 
 if __name__=="__main__":
